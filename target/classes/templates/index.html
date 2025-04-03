@@ -5,49 +5,128 @@
 </head>
 <body>
     <div th:fragment="content">
-        <div class="jumbotron text-center">
-            <h1 class="display-4">Welcome to TUNGA Restaurant</h1>
-            <p class="lead">Experience the finest dining and delivery service</p>
-        </div>
-        
-        <div class="row">
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body text-center">
-                        <i class="fas fa-utensils fa-3x mb-3"></i>
-                        <h3>Table Reservation</h3>
-                        <p>Book your table in advance and enjoy a seamless dining experience</p>
-                        <a href="/reservations" class="btn btn-primary">Make a Reservation</a>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body text-center">
-                        <i class="fas fa-truck fa-3x mb-3"></i>
-                        <h3>Food Delivery</h3>
-                        <p>Order your favorite dishes and get them delivered to your doorstep</p>
-                        <a href="/orders" class="btn btn-primary">Order Food</a>
-                    </div>
+        <!-- Hero Section -->
+        <div class="hero-section text-center text-white py-5 mb-5" style="background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'); background-size: cover; background-position: center; padding: 100px 0;">
+            <div class="container">
+                <h1 class="display-4 mb-4">Welcome to TUNGA Restaurant</h1>
+                <p class="lead mb-4">Experience the finest dining with our unique blend of traditional and modern cuisine</p>
+                <div class="d-flex justify-content-center gap-3">
+                    <a href="/reservations" class="btn btn-primary btn-lg">Make a Reservation</a>
+                    <a href="/orders" class="btn btn-outline-light btn-lg">Order Food</a>
                 </div>
             </div>
         </div>
-        
-        <div class="row mt-4">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h3>About TUNGA Restaurant</h3>
+
+        <!-- About Section -->
+        <div class="container mb-5">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h2 class="mb-4">About TUNGA Restaurant</h2>
+                    <p class="lead">Founded in 2010, TUNGA Restaurant has grown into a beloved chain of restaurants known for our exceptional service and culinary excellence.</p>
+                    <p>Our commitment to quality ingredients, innovative recipes, and warm hospitality has made us a favorite destination for food lovers across the country.</p>
+                    <p>With over 50 locations nationwide, we continue to expand our presence while maintaining the high standards that have made us successful.</p>
+                </div>
+                <div class="col-md-6">
+                    <img src="https://images.unsplash.com/photo-1552566626-52f8b828add9?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Restaurant Interior" class="img-fluid rounded shadow">
+                </div>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <div class="bg-light py-5 mb-5">
+            <div class="container">
+                <h2 class="text-center mb-5">Why Choose TUNGA?</h2>
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-body text-center">
+                                <i class="fas fa-utensils fa-3x text-primary mb-3"></i>
+                                <h4>Fresh Ingredients</h4>
+                                <p>We source the finest ingredients from local suppliers to ensure the highest quality in every dish.</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <p>TUNGA Restaurant is known for its wide range of continental cuisine and consummate style. We provide:</p>
-                        <ul>
-                            <li>Fully-equipped private meeting rooms</li>
-                            <li>Regal banquet halls</li>
-                            <li>Wide range of bakery & fast food products</li>
-                            <li>24/7 home delivery service</li>
-                        </ul>
+                    <div class="col-md-4">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-body text-center">
+                                <i class="fas fa-clock fa-3x text-primary mb-3"></i>
+                                <h4>Quick Service</h4>
+                                <p>Efficient service without compromising on quality. Your food is prepared fresh and served promptly.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-body text-center">
+                                <i class="fas fa-motorcycle fa-3x text-primary mb-3"></i>
+                                <h4>Fast Delivery</h4>
+                                <p>Quick and reliable delivery service to bring our delicious food right to your doorstep.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Menu Preview Section -->
+        <div class="container mb-5">
+            <h2 class="text-center mb-5">Popular Dishes</h2>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" class="card-img-top" alt="Signature Dish">
+                        <div class="card-body">
+                            <h5 class="card-title">Signature Pasta</h5>
+                            <p class="card-text">Our most popular pasta dish, made with fresh ingredients and special sauce.</p>
+                            <p class="card-text"><small class="text-muted">$24.99</small></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <img src="https://images.unsplash.com/photo-1544025162-d76694265947?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" class="card-img-top" alt="Grilled Steak">
+                        <div class="card-body">
+                            <h5 class="card-title">Grilled Steak</h5>
+                            <p class="card-text">Premium cut steak grilled to perfection with our special seasoning.</p>
+                            <p class="card-text"><small class="text-muted">$34.99</small></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" class="card-img-top" alt="Fresh Pizza">
+                        <div class="card-body">
+                            <h5 class="card-title">Fresh Pizza</h5>
+                            <p class="card-text">Hand-tossed pizza with fresh toppings and homemade sauce.</p>
+                            <p class="card-text"><small class="text-muted">$19.99</small></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Section -->
+        <div class="bg-light py-5">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4">
+                        <h4>Contact Us</h4>
+                        <p><i class="fas fa-phone"></i> +1 (555) 123-4567</p>
+                        <p><i class="fas fa-envelope"></i> info@tungarestaurant.com</p>
+                        <p><i class="fas fa-map-marker-alt"></i> 123 Restaurant Street, City, Country</p>
+                    </div>
+                    <div class="col-md-4">
+                        <h4>Opening Hours</h4>
+                        <p>Monday - Friday: 11:00 AM - 10:00 PM</p>
+                        <p>Saturday - Sunday: 10:00 AM - 11:00 PM</p>
+                    </div>
+                    <div class="col-md-4">
+                        <h4>Follow Us</h4>
+                        <div class="social-links">
+                            <a href="#" class="text-dark me-3"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="text-dark me-3"><i class="fab fa-instagram"></i></a>
+                            <a href="#" class="text-dark me-3"><i class="fab fa-twitter"></i></a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -55,7 +134,7 @@
     </div>
 
     <script th:fragment="script">
-        // Add any JavaScript for the index page here
+        // Add any JavaScript for the homepage here
     </script>
 </body>
 </html> 

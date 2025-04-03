@@ -11,55 +11,61 @@
                     <div class="card-header">
                         <h3>Menu Items</h3>
                     </div>
-                    <div class="card-body" style="max-height: calc(100vh - 200px); overflow-y: auto;">
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="foodType" id="all" checked>
-                                    <label class="form-check-label" for="all">All Items</label>
+                    <div class="card-body">
+                        <!-- Sticky Search and Filter Section -->
+                        <div class="sticky-top bg-white py-3 mb-3" style="z-index: 1000;">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="foodType" id="all" checked>
+                                        <label class="form-check-label" for="all">All Items</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="foodType" id="veg">
+                                        <label class="form-check-label" for="veg">Vegetarian</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="foodType" id="nonVeg">
+                                        <label class="form-check-label" for="nonVeg">Non-Vegetarian</label>
+                                    </div>
                                 </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="foodType" id="veg">
-                                    <label class="form-check-label" for="veg">Vegetarian</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="foodType" id="nonVeg">
-                                    <label class="form-check-label" for="nonVeg">Non-Vegetarian</label>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="input-group">
-                                    <input type="text" class="form-control" id="searchInput" placeholder="Search menu items...">
-                                    <button class="btn btn-outline-secondary" type="button" id="clearSearch">
-                                        <i class="fas fa-times"></i>
-                                    </button>
+                                <div class="col-md-6">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="searchInput" placeholder="Search menu items...">
+                                        <button class="btn btn-outline-secondary" type="button" id="clearSearch">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         
-                        <div class="row" id="menuItems">
-                            <div th:each="item : ${menuItems}" class="col-12 mb-3 menu-item" th:data-veg="${item.isVegetarian}" th:data-name="${item.name}">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="row align-items-center">
-                                            <div class="col-md-8">
-                                                <h5 class="card-title" th:text="${item.name}"></h5>
-                                                <p class="card-text" th:text="${item.description}"></p>
-                                                <p class="card-text">
-                                                    <strong>Price:</strong> $<span th:text="${#numbers.formatDecimal(item.price, 1, 2)}"></span>
-                                                    <br>
-                                                    <strong>Serves:</strong> <span th:text="${item.servingSize}"></span> person(s)
-                                                    <br>
-                                                    <span class="badge" th:classappend="${item.isVegetarian} ? 'bg-success' : 'bg-danger'"
-                                                          th:text="${item.isVegetarian} ? 'Vegetarian' : 'Non-Vegetarian'">
-                                                    </span>
-                                                </p>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="input-group">
-                                                    <input type="number" class="form-control quantity" min="1" value="1" 
-                                                           th:data-price="${item.price}" th:data-id="${item.id}">
-                                                    <button class="btn btn-primary add-to-cart">Add to Cart</button>
+                        <!-- Menu Items Section with Scroll -->
+                        <div style="max-height: calc(100vh - 300px); overflow-y: auto;">
+                            <div class="row" id="menuItems">
+                                <div th:each="item : ${menuItems}" class="col-12 mb-3 menu-item" th:data-veg="${item.isVegetarian}" th:data-name="${item.name}">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="row align-items-center">
+                                                <div class="col-md-8">
+                                                    <h5 class="card-title" th:text="${item.name}"></h5>
+                                                    <p class="card-text" th:text="${item.description}"></p>
+                                                    <p class="card-text">
+                                                        <strong>Price:</strong> $<span th:text="${#numbers.formatDecimal(item.price, 1, 2)}"></span>
+                                                        <br>
+                                                        <strong>Serves:</strong> <span th:text="${item.servingSize}"></span> person(s)
+                                                        <br>
+                                                        <span class="badge" th:classappend="${item.isVegetarian} ? 'bg-success' : 'bg-danger'"
+                                                              th:text="${item.isVegetarian} ? 'Vegetarian' : 'Non-Vegetarian'">
+                                                        </span>
+                                                    </p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="input-group">
+                                                        <input type="number" class="form-control quantity" min="1" value="1" 
+                                                               th:data-price="${item.price}" th:data-id="${item.id}">
+                                                        <button class="btn btn-primary add-to-cart">Add to Cart</button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
