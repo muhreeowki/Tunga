@@ -18,6 +18,7 @@ public class Reservation {
     private int numberOfGuests;
     private LocalDateTime reservationTime;
     private String tokenNumber;
+    private String specialRequests;
     
     @ManyToOne
     @JoinColumn(name = "table_id")

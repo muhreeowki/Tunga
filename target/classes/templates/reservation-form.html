@@ -12,7 +12,7 @@
                         <h3>Make a Reservation</h3>
                     </div>
                     <div class="card-body">
-                        <form th:action="@{/reservations}" method="post" th:object="${reservation}">
+                        <form th:action="@{/reservations}" method="post" th:object="${reservation}" class="needs-validation" novalidate>
                             <div class="mb-3">
                                 <label for="customerName" class="form-label">Full Name</label>
                                 <input type="text" class="form-control" id="customerName" th:field="*{customerName}" required>
@@ -29,13 +29,8 @@
                             </div>
                             
                             <div class="mb-3">
-                                <label for="reservationDate" class="form-label">Date</label>
-                                <input type="date" class="form-control" id="reservationDate" th:field="*{reservationDate}" required>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label for="reservationTime" class="form-label">Time</label>
-                                <input type="time" class="form-control" id="reservationTime" th:field="*{reservationTime}" required>
+                                <label for="reservationTime" class="form-label">Date & Time</label>
+                                <input type="datetime-local" class="form-control" id="reservationTime" th:field="*{reservationTime}" required>
                             </div>
                             
                             <div class="mb-3">
@@ -56,11 +51,11 @@
                             
                             <div class="mb-3">
                                 <label for="specialRequests" class="form-label">Special Requests</label>
-                                <textarea class="form-control" id="specialRequests" th:field="*{specialRequests}" rows="3"></textarea>
+                                <textarea class="form-control" id="specialRequests" th:field="*{specialRequests}" rows="3" placeholder="Any special requests or dietary requirements?"></textarea>
                             </div>
                             
-                            <div class="text-center">
-                                <button type="submit" class="btn btn-primary">Make Reservation</button>
+                            <div class="text-center mt-4">
+                                <button type="submit" class="btn btn-primary btn-lg">Make Reservation</button>
                             </div>
                         </form>
                     </div>
@@ -70,7 +65,20 @@
     </div>
 
     <script th:fragment="script">
-        // Add any JavaScript for the reservation form here
+        // Form validation
+        (function () {
+            'use strict'
+            var forms = document.querySelectorAll('.needs-validation')
+            Array.prototype.slice.call(forms).forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+                    form.classList.add('was-validated')
+                }, false)
+            })
+        })()
     </script>
 </body>
 </html> 

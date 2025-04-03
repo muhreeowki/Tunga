@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" th:replace="layout/base :: html(~{::title}, ~{::div})">
+<html xmlns:th="http://www.thymeleaf.org" th:replace="layout/base :: html(~{::title}, ~{::div}, ~{::script})">
 <head>
     <title>Reservation Confirmation - TUNGA Restaurant</title>
 </head>
@@ -41,5 +41,9 @@
             </div>
         </div>
     </div>
+
+    <script th:fragment="script">
+        // Add any JavaScript for the confirmation page here
+    </script>
 </body>
 </html> 
