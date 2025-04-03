@@ -22,6 +22,19 @@ public class Order {
     private String tokenNumber;
     private double totalAmount;
     
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status = OrderStatus.PENDING;
+    
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> orderItems;
+    
+    public enum OrderStatus {
+        PENDING,
+        CONFIRMED,
+        PREPARING,
+        READY,
+        DELIVERING,
+        DELIVERED,
+        CANCELLED
+    }
 } 

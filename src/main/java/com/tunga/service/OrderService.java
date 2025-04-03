@@ -2,7 +2,9 @@ package com.tunga.service;
 
 import com.tunga.model.Order;
 import com.tunga.model.OrderItem;
+import com.tunga.model.MenuItem;
 import com.tunga.repository.OrderRepository;
+import com.tunga.repository.MenuItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
@@ -15,6 +17,9 @@ public class OrderService {
     @Autowired
     private OrderRepository orderRepository;
     
+    @Autowired
+    private MenuItemRepository menuItemRepository;
+    
     public Order createOrder(Order order) {
         // Set order time
         order.setOrderTime(LocalDateTime.now());
@@ -26,16 +31,19 @@ public class OrderService {
         // Generate token number
         order.setTokenNumber(UUID.randomUUID().toString().substring(0, 8));
         
-        // Calculate total amount
-        double totalAmount = order.getOrderItems().stream()
-            .mapToDouble(item -> item.getPrice() * item.getQuantity())
-            .sum();
-        order.setTotalAmount(totalAmount);
-        
-        // Set order reference in order items
+        // Calculate total amount and set menu items
+        double totalAmount = 0;
         for (OrderItem item : order.getOrderItems()) {
+            MenuItem menuItem = menuItemRepository.findById(item.getMenuItem().getId())
+                .orElseThrow(() -> new RuntimeException("Menu item not found: " + item.getMenuItem().getId()));
+            
+            item.setMenuItem(menuItem);
             item.setOrder(order);
+            item.setPrice(menuItem.getPrice());
+            
+            totalAmount += item.getPrice() * item.getQuantity();
         }
+        order.setTotalAmount(totalAmount);
         
         return orderRepository.save(order);
     }

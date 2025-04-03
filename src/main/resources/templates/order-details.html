@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="layout/base :: html(~{::title}, ~{::div}, ~{::script})">
+<head>
+    <title>Order Details - TUNGA Restaurant</title>
+</head>
+<body>
+    <div th:fragment="content">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Order Details</h3>
+                    </div>
+                    <div class="card-body">
+                        <div th:if="${order == null}" class="text-center">
+                            <div class="alert alert-danger">
+                                <h4>Order Not Found</h4>
+                                <p>The order you're looking for could not be found.</p>
+                                <p>Please check your token number and try again.</p>
+                            </div>
+                            <a href="/" class="btn btn-primary">Return to Home</a>
+                        </div>
+                        
+                        <div th:if="${order != null}">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5>Customer Information</h5>
+                                    <p><strong>Name:</strong> <span th:text="${order.customerName}"></span></p>
+                                    <p><strong>Email:</strong> <span th:text="${order.customerEmail}"></span></p>
+                                    <p><strong>Phone:</strong> <span th:text="${order.customerPhone}"></span></p>
+                                    <p><strong>Delivery Address:</strong> <span th:text="${order.customerAddress}"></span></p>
+                                </div>
+                                <div class="col-md-6">
+                                    <h5>Order Information</h5>
+                                    <p><strong>Token Number:</strong> <span th:text="${order.tokenNumber}"></span></p>
+                                    <p><strong>Order Time:</strong> <span th:text="${#temporals.format(order.orderTime, 'dd MMM yyyy HH:mm')}"></span></p>
+                                    <p><strong>Estimated Delivery:</strong> <span th:text="${#temporals.format(order.estimatedDeliveryTime, 'dd MMM yyyy HH:mm')}"></span></p>
+                                    <p><strong>Status:</strong> <span th:text="${order.status}"></span></p>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4">
+                                <h5>Order Items</h5>
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Item</th>
+                                                <th>Quantity</th>
+                                                <th>Price</th>
+                                                <th>Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr th:each="item : ${order.orderItems}">
+                                                <td th:text="${item.menuItem.name}"></td>
+                                                <td th:text="${item.quantity}"></td>
+                                                <td>$<span th:text="${#numbers.formatDecimal(item.price, 1, 2)}"></span></td>
+                                                <td>$<span th:text="${#numbers.formatDecimal(item.price * item.quantity, 1, 2)}"></span></td>
+                                            </tr>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td colspan="3" class="text-end"><strong>Total Amount:</strong></td>
+                                                <td>$<span th:text="${#numbers.formatDecimal(order.totalAmount, 1, 2)}"></span></td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            <div class="alert alert-info mt-4">
+                                <h5>Important Information</h5>
+                                <p>Your order will be delivered within 60-120 minutes from the order time.</p>
+                                <p>You can track your order status using your token number.</p>
+                                <p>For any queries, please contact us at support@tungarestaurant.com</p>
+                            </div>
+                            
+                            <div class="text-center mt-4">
+                                <a href="/" class="btn btn-primary">Return to Home</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script th:fragment="script">
+        // Add any JavaScript for the order details page here
+    </script>
+</body>
+</html> 

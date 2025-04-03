@@ -27,10 +27,18 @@
                                     <label class="form-check-label" for="nonVeg">Non-Vegetarian</label>
                                 </div>
                             </div>
+                            <div class="col-md-6">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="searchInput" placeholder="Search menu items...">
+                                    <button class="btn btn-outline-secondary" type="button" id="clearSearch">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                         
                         <div class="row" id="menuItems">
-                            <div th:each="item : ${menuItems}" class="col-12 mb-3 menu-item" th:data-veg="${item.isVegetarian}">
+                            <div th:each="item : ${menuItems}" class="col-12 mb-3 menu-item" th:data-veg="${item.isVegetarian}" th:data-name="${item.name}">
                                 <div class="card">
                                     <div class="card-body">
                                         <div class="row align-items-center">
@@ -113,24 +121,35 @@
             const menuItems = document.querySelectorAll('.menu-item');
             const orderItems = document.getElementById('orderItems');
             const totalAmount = document.getElementById('totalAmount');
+            const searchInput = document.getElementById('searchInput');
+            const clearSearch = document.getElementById('clearSearch');
             let cart = [];
             
-            document.querySelectorAll('input[name="foodType"]').forEach(radio => {
-                radio.addEventListener('change', function() {
-                    const type = this.id;
-                    menuItems.forEach(item => {
-                        const isVeg = item.dataset.veg === 'true';
-                        if (type === 'all') {
-                            item.style.display = 'block';
-                        } else if (type === 'veg' && isVeg) {
-                            item.style.display = 'block';
-                        } else if (type === 'nonVeg' && !isVeg) {
-                            item.style.display = 'block';
-                        } else {
-                            item.style.display = 'none';
-                        }
-                    });
+            function filterItems() {
+                const searchTerm = searchInput.value.toLowerCase();
+                const foodType = document.querySelector('input[name="foodType"]:checked').id;
+                
+                menuItems.forEach(item => {
+                    const isVeg = item.dataset.veg === 'true';
+                    const itemName = item.dataset.name.toLowerCase();
+                    const matchesSearch = itemName.includes(searchTerm);
+                    const matchesType = foodType === 'all' || 
+                                      (foodType === 'veg' && isVeg) || 
+                                      (foodType === 'nonVeg' && !isVeg);
+                    
+                    item.style.display = matchesSearch && matchesType ? 'block' : 'none';
                 });
+            }
+            
+            searchInput.addEventListener('input', filterItems);
+            
+            clearSearch.addEventListener('click', function() {
+                searchInput.value = '';
+                filterItems();
+            });
+            
+            document.querySelectorAll('input[name="foodType"]').forEach(radio => {
+                radio.addEventListener('change', filterItems);
             });
             
             document.querySelectorAll('.add-to-cart').forEach(button => {
