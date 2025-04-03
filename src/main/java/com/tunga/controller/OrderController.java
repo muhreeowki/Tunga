@@ -1,6 +1,8 @@
 package com.tunga.controller;
 
 import com.tunga.model.Order;
+import com.tunga.model.MenuItem;
+import com.tunga.repository.MenuItemRepository;
 import com.tunga.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,9 +18,13 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
     
+    @Autowired
+    private MenuItemRepository menuItemRepository;
+    
     @GetMapping
     public String showOrderForm(Model model) {
         model.addAttribute("order", new Order());
+        model.addAttribute("menuItems", menuItemRepository.findAll());
         return "order-form";
     }
     

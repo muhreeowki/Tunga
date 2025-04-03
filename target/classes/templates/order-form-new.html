@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" th:replace="layout/base :: html(~{::title}, ~{::div}, ~{::script})">
+<html xmlns:th="http://www.thymeleaf.org" th:replace="layout/base :: html(~{::title}, ~{::div})">
 <head>
     <title>Order Food - TUNGA Restaurant</title>
 </head>
@@ -107,24 +107,23 @@
             </div>
         </div>
     </div>
-
-    <script th:fragment="script">
+    
+    <script>
         document.addEventListener('DOMContentLoaded', function() {
             const menuItems = document.querySelectorAll('.menu-item');
             const orderItems = document.getElementById('orderItems');
             const totalAmount = document.getElementById('totalAmount');
             let cart = [];
             
+            // Filter menu items
             document.querySelectorAll('input[name="foodType"]').forEach(radio => {
                 radio.addEventListener('change', function() {
                     const type = this.id;
                     menuItems.forEach(item => {
                         const isVeg = item.dataset.veg === 'true';
-                        if (type === 'all') {
-                            item.style.display = 'block';
-                        } else if (type === 'veg' && isVeg) {
-                            item.style.display = 'block';
-                        } else if (type === 'nonVeg' && !isVeg) {
+                        if (type === 'all' || 
+                            (type === 'veg' && isVeg) || 
+                            (type === 'nonVeg' && !isVeg)) {
                             item.style.display = 'block';
                         } else {
                             item.style.display = 'none';
@@ -133,6 +132,7 @@
                 });
             });
             
+            // Add to cart
             document.querySelectorAll('.add-to-cart').forEach(button => {
                 button.addEventListener('click', function() {
                     const input = this.previousElementSibling;
@@ -142,6 +142,7 @@
                         const price = parseFloat(input.dataset.price);
                         const name = this.closest('.card').querySelector('.card-title').textContent;
                         
+                        // Add to cart
                         cart.push({
                             id: itemId,
                             name: name,
@@ -149,7 +150,10 @@
                             quantity: quantity
                         });
                         
+                        // Update order items
                         updateOrderItems();
+                        
+                        // Reset quantity input
                         input.value = 0;
                     }
                 });

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" th:replace="layout/base :: html(~{::title}, ~{::div})">
+<html xmlns:th="http://www.thymeleaf.org" th:replace="layout/base :: html(~{::title}, ~{::div}, ~{::script})">
 <head>
     <title>Table Reservation - TUNGA Restaurant</title>
 </head>
@@ -9,7 +9,7 @@
             <div class="col-md-8">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="text-center">Table Reservation</h3>
+                        <h3>Make a Reservation</h3>
                     </div>
                     <div class="card-body">
                         <form th:action="@{/reservations}" method="post" th:object="${reservation}">
@@ -29,13 +29,18 @@
                             </div>
                             
                             <div class="mb-3">
-                                <label for="numberOfGuests" class="form-label">Number of Guests</label>
-                                <input type="number" class="form-control" id="numberOfGuests" th:field="*{numberOfGuests}" min="1" required>
+                                <label for="reservationDate" class="form-label">Date</label>
+                                <input type="date" class="form-control" id="reservationDate" th:field="*{reservationDate}" required>
                             </div>
                             
                             <div class="mb-3">
-                                <label for="reservationTime" class="form-label">Reservation Date and Time</label>
-                                <input type="datetime-local" class="form-control" id="reservationTime" th:field="*{reservationTime}" required>
+                                <label for="reservationTime" class="form-label">Time</label>
+                                <input type="time" class="form-control" id="reservationTime" th:field="*{reservationTime}" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="numberOfGuests" class="form-label">Number of Guests</label>
+                                <input type="number" class="form-control" id="numberOfGuests" th:field="*{numberOfGuests}" min="1" max="10" required>
                             </div>
                             
                             <div class="mb-3">
@@ -44,12 +49,15 @@
                                     <option value="">Select a table</option>
                                     <option th:each="table : ${tables}" 
                                             th:value="${table.id}"
-                                            th:text="${table.tableNumber + ' (Capacity: ' + table.capacity + ')'}">
+                                            th:text="${'Table ' + table.tableNumber + ' (Capacity: ' + table.capacity + ')'}">
                                     </option>
                                 </select>
                             </div>
                             
-                            <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+                            <div class="mb-3">
+                                <label for="specialRequests" class="form-label">Special Requests</label>
+                                <textarea class="form-control" id="specialRequests" th:field="*{specialRequests}" rows="3"></textarea>
+                            </div>
                             
                             <div class="text-center">
                                 <button type="submit" class="btn btn-primary">Make Reservation</button>
@@ -60,5 +68,9 @@
             </div>
         </div>
     </div>
+
+    <script th:fragment="script">
+        // Add any JavaScript for the reservation form here
+    </script>
 </body>
 </html> 

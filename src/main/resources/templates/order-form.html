@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" th:replace="layout/base :: html(~{::title}, ~{::div})">
+<html xmlns:th="http://www.thymeleaf.org" th:replace="layout/base :: html(~{::title}, ~{::div}, ~{::script})">
 <head>
     <title>Order Food - TUNGA Restaurant</title>
 </head>
@@ -11,9 +11,9 @@
                     <div class="card-header">
                         <h3>Menu Items</h3>
                     </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
+                    <div class="card-body" style="max-height: calc(100vh - 200px); overflow-y: auto;">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="foodType" id="all" checked>
                                     <label class="form-check-label" for="all">All Items</label>
@@ -30,20 +30,30 @@
                         </div>
                         
                         <div class="row" id="menuItems">
-                            <div th:each="item : ${menuItems}" class="col-md-6 mb-3">
+                            <div th:each="item : ${menuItems}" class="col-12 mb-3 menu-item" th:data-veg="${item.isVegetarian}">
                                 <div class="card">
                                     <div class="card-body">
-                                        <h5 class="card-title" th:text="${item.name}"></h5>
-                                        <p class="card-text" th:text="${item.description}"></p>
-                                        <p class="card-text">
-                                            <strong>Price:</strong> $<span th:text="${#numbers.formatDecimal(item.price, 1, 2)}"></span>
-                                            <br>
-                                            <strong>Serves:</strong> <span th:text="${item.servingSize}"></span> person(s)
-                                        </p>
-                                        <div class="input-group">
-                                            <input type="number" class="form-control quantity" min="0" value="0" 
-                                                   th:data-price="${item.price}" th:data-id="${item.id}">
-                                            <button class="btn btn-primary add-to-cart">Add to Cart</button>
+                                        <div class="row align-items-center">
+                                            <div class="col-md-8">
+                                                <h5 class="card-title" th:text="${item.name}"></h5>
+                                                <p class="card-text" th:text="${item.description}"></p>
+                                                <p class="card-text">
+                                                    <strong>Price:</strong> $<span th:text="${#numbers.formatDecimal(item.price, 1, 2)}"></span>
+                                                    <br>
+                                                    <strong>Serves:</strong> <span th:text="${item.servingSize}"></span> person(s)
+                                                    <br>
+                                                    <span class="badge" th:classappend="${item.isVegetarian} ? 'bg-success' : 'bg-danger'"
+                                                          th:text="${item.isVegetarian} ? 'Vegetarian' : 'Non-Vegetarian'">
+                                                    </span>
+                                                </p>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="input-group">
+                                                    <input type="number" class="form-control quantity" min="0" value="0" 
+                                                           th:data-price="${item.price}" th:data-id="${item.id}">
+                                                    <button class="btn btn-primary add-to-cart">Add to Cart</button>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -54,7 +64,7 @@
             </div>
             
             <div class="col-md-4">
-                <div class="card">
+                <div class="card sticky-top" style="top: 20px;">
                     <div class="card-header">
                         <h3>Your Order</h3>
                     </div>
@@ -97,23 +107,24 @@
             </div>
         </div>
     </div>
-    
-    <script>
+
+    <script th:fragment="script">
         document.addEventListener('DOMContentLoaded', function() {
             const menuItems = document.querySelectorAll('.menu-item');
             const orderItems = document.getElementById('orderItems');
             const totalAmount = document.getElementById('totalAmount');
             let cart = [];
             
-            // Filter menu items
             document.querySelectorAll('input[name="foodType"]').forEach(radio => {
                 radio.addEventListener('change', function() {
                     const type = this.id;
                     menuItems.forEach(item => {
                         const isVeg = item.dataset.veg === 'true';
-                        if (type === 'all' || 
-                            (type === 'veg' && isVeg) || 
-                            (type === 'nonVeg' && !isVeg)) {
+                        if (type === 'all') {
+                            item.style.display = 'block';
+                        } else if (type === 'veg' && isVeg) {
+                            item.style.display = 'block';
+                        } else if (type === 'nonVeg' && !isVeg) {
                             item.style.display = 'block';
                         } else {
                             item.style.display = 'none';
@@ -122,7 +133,6 @@
                 });
             });
             
-            // Add to cart
             document.querySelectorAll('.add-to-cart').forEach(button => {
                 button.addEventListener('click', function() {
                     const input = this.previousElementSibling;
@@ -132,7 +142,6 @@
                         const price = parseFloat(input.dataset.price);
                         const name = this.closest('.card').querySelector('.card-title').textContent;
                         
-                        // Add to cart
                         cart.push({
                             id: itemId,
                             name: name,
@@ -140,8 +149,8 @@
                             quantity: quantity
                         });
                         
-                        // Update order items
                         updateOrderItems();
+                        input.value = 0;
                     }
                 });
             });
