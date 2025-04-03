@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="layout/base :: html(~{::title}, ~{::div})">
+<head>
+    <title>Welcome to TUNGA Restaurant</title>
+</head>
+<body>
+    <div th:fragment="content">
+        <div class="jumbotron text-center">
+            <h1 class="display-4">Welcome to TUNGA Restaurant</h1>
+            <p class="lead">Experience the finest dining and delivery service</p>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-utensils fa-3x mb-3"></i>
+                        <h3>Table Reservation</h3>
+                        <p>Book your table in advance and enjoy a seamless dining experience</p>
+                        <a href="/reservations" class="btn btn-primary">Make a Reservation</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-truck fa-3x mb-3"></i>
+                        <h3>Food Delivery</h3>
+                        <p>Order your favorite dishes and get them delivered to your doorstep</p>
+                        <a href="/orders" class="btn btn-primary">Order Food</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>About TUNGA Restaurant</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>TUNGA Restaurant is known for its wide range of continental cuisine and consummate style. We provide:</p>
+                        <ul>
+                            <li>Fully-equipped private meeting rooms</li>
+                            <li>Regal banquet halls</li>
+                            <li>Wide range of bakery & fast food products</li>
+                            <li>24/7 home delivery service</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

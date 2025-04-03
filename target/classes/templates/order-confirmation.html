@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="layout/base :: html">
+<head>
+    <title>Order Confirmation - TUNGA Restaurant</title>
+</head>
+<body>
+    <div th:fragment="content">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header bg-success text-white">
+                        <h3 class="text-center">Order Confirmed!</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-center mb-4">
+                            <i class="fas fa-check-circle fa-5x text-success"></i>
+                        </div>
+                        
+                        <div class="alert alert-info">
+                            <h4 class="alert-heading">Your Order Details</h4>
+                            <hr>
+                            <p><strong>Token Number:</strong> <span th:text="${order.tokenNumber}"></span></p>
+                            <p><strong>Name:</strong> <span th:text="${order.customerName}"></span></p>
+                            <p><strong>Delivery Address:</strong> <span th:text="${order.customerAddress}"></span></p>
+                            <p><strong>Order Time:</strong> <span th:text="${#temporals.format(order.orderTime, 'dd MMM yyyy HH:mm')}"></span></p>
+                            <p><strong>Estimated Delivery Time:</strong> <span th:text="${#temporals.format(order.estimatedDeliveryTime, 'dd MMM yyyy HH:mm')}"></span></p>
+                            <p><strong>Total Amount:</strong> $<span th:text="${#numbers.formatDecimal(order.totalAmount, 1, 2)}"></span></p>
+                        </div>
+                        
+                        <div class="alert alert-warning">
+                            <h4 class="alert-heading">Order Items</h4>
+                            <hr>
+                            <div th:each="item : ${order.orderItems}">
+                                <p>
+                                    <span th:text="${item.menuItem.name}"></span> x 
+                                    <span th:text="${item.quantity}"></span> = 
+                                    $<span th:text="${#numbers.formatDecimal(item.price * item.quantity, 1, 2)}"></span>
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="alert alert-info">
+                            <h4 class="alert-heading">Important Information</h4>
+                            <p>Please keep your token number safe. You will need it to check your order status.</p>
+                            <p>Your order will be delivered within 60-120 minutes from the order time.</p>
+                            <p>You can check your order status at any time using this token number.</p>
+                        </div>
+                        
+                        <div class="text-center">
+                            <a href="/" class="btn btn-primary">Return to Home</a>
+                            <a th:href="@{/orders/{token}(token=${order.tokenNumber})}" class="btn btn-secondary">View Order Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="layout/base :: html(~{::title}, ~{::div})">
+<head>
+    <title>Reservation Confirmation - TUNGA Restaurant</title>
+</head>
+<body>
+    <div th:fragment="content">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header bg-success text-white">
+                        <h3 class="text-center">Reservation Confirmed!</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-center mb-4">
+                            <i class="fas fa-check-circle fa-5x text-success"></i>
+                        </div>
+                        
+                        <div class="alert alert-info">
+                            <h4 class="alert-heading">Your Reservation Details</h4>
+                            <hr>
+                            <p><strong>Token Number:</strong> <span th:text="${reservation.tokenNumber}"></span></p>
+                            <p><strong>Name:</strong> <span th:text="${reservation.customerName}"></span></p>
+                            <p><strong>Date & Time:</strong> <span th:text="${#temporals.format(reservation.reservationTime, 'dd MMM yyyy HH:mm')}"></span></p>
+                            <p><strong>Number of Guests:</strong> <span th:text="${reservation.numberOfGuests}"></span></p>
+                            <p><strong>Table:</strong> <span th:text="${reservation.table.tableNumber}"></span></p>
+                        </div>
+                        
+                        <div class="alert alert-warning">
+                            <h4 class="alert-heading">Important Information</h4>
+                            <p>Please keep your token number safe. You will need it to check your reservation status.</p>
+                            <p>You can check your reservation status at any time using this token number.</p>
+                        </div>
+                        
+                        <div class="text-center">
+                            <a href="/" class="btn btn-primary">Return to Home</a>
+                            <a th:href="@{/reservations/{token}(token=${reservation.tokenNumber})}" class="btn btn-secondary">View Reservation Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

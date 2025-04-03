@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="layout/base :: html(~{::title}, ~{::div})">
+<head>
+    <title>Order Food - TUNGA Restaurant</title>
+</head>
+<body>
+    <div th:fragment="content">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Menu Items</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="foodType" id="all" checked>
+                                    <label class="form-check-label" for="all">All Items</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="foodType" id="veg">
+                                    <label class="form-check-label" for="veg">Vegetarian</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="foodType" id="nonVeg">
+                                    <label class="form-check-label" for="nonVeg">Non-Vegetarian</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row" id="menuItems">
+                            <div th:each="item : ${menuItems}" class="col-md-6 mb-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title" th:text="${item.name}"></h5>
+                                        <p class="card-text" th:text="${item.description}"></p>
+                                        <p class="card-text">
+                                            <strong>Price:</strong> $<span th:text="${#numbers.formatDecimal(item.price, 1, 2)}"></span>
+                                            <br>
+                                            <strong>Serves:</strong> <span th:text="${item.servingSize}"></span> person(s)
+                                        </p>
+                                        <div class="input-group">
+                                            <input type="number" class="form-control quantity" min="0" value="0" 
+                                                   th:data-price="${item.price}" th:data-id="${item.id}">
+                                            <button class="btn btn-primary add-to-cart">Add to Cart</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Your Order</h3>
+                    </div>
+                    <div class="card-body">
+                        <form th:action="@{/orders}" method="post" th:object="${order}">
+                            <div class="mb-3">
+                                <label for="customerName" class="form-label">Full Name</label>
+                                <input type="text" class="form-control" id="customerName" th:field="*{customerName}" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="customerAddress" class="form-label">Delivery Address</label>
+                                <textarea class="form-control" id="customerAddress" th:field="*{customerAddress}" required></textarea>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="customerPhone" class="form-label">Phone Number</label>
+                                <input type="tel" class="form-control" id="customerPhone" th:field="*{customerPhone}" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="customerEmail" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="customerEmail" th:field="*{customerEmail}" required>
+                            </div>
+                            
+                            <div id="orderItems">
+                                <!-- Order items will be added here dynamically -->
+                            </div>
+                            
+                            <div class="mb-3">
+                                <h4>Total Amount: $<span id="totalAmount">0.00</span></h4>
+                            </div>
+                            
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary">Place Order</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuItems = document.querySelectorAll('.menu-item');
+            const orderItems = document.getElementById('orderItems');
+            const totalAmount = document.getElementById('totalAmount');
+            let cart = [];
+            
+            // Filter menu items
+            document.querySelectorAll('input[name="foodType"]').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    const type = this.id;
+                    menuItems.forEach(item => {
+                        const isVeg = item.dataset.veg === 'true';
+                        if (type === 'all' || 
+                            (type === 'veg' && isVeg) || 
+                            (type === 'nonVeg' && !isVeg)) {
+                            item.style.display = 'block';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                });
+            });
+            
+            // Add to cart
+            document.querySelectorAll('.add-to-cart').forEach(button => {
+                button.addEventListener('click', function() {
+                    const input = this.previousElementSibling;
+                    const quantity = parseInt(input.value);
+                    if (quantity > 0) {
+                        const itemId = input.dataset.id;
+                        const price = parseFloat(input.dataset.price);
+                        const name = this.closest('.card').querySelector('.card-title').textContent;
+                        
+                        // Add to cart
+                        cart.push({
+                            id: itemId,
+                            name: name,
+                            price: price,
+                            quantity: quantity
+                        });
+                        
+                        // Update order items
+                        updateOrderItems();
+                    }
+                });
+            });
+            
+            function updateOrderItems() {
+                orderItems.innerHTML = '';
+                let total = 0;
+                
+                cart.forEach(item => {
+                    const itemTotal = item.price * item.quantity;
+                    total += itemTotal;
+                    
+                    const div = document.createElement('div');
+                    div.className = 'mb-2';
+                    div.innerHTML = `
+                        <input type="hidden" name="orderItems[${cart.indexOf(item)}].menuItem.id" value="${item.id}">
+                        <input type="hidden" name="orderItems[${cart.indexOf(item)}].quantity" value="${item.quantity}">
+                        <input type="hidden" name="orderItems[${cart.indexOf(item)}].price" value="${item.price}">
+                        <p>${item.name} x ${item.quantity} = $${itemTotal.toFixed(2)}</p>
+                    `;
+                    orderItems.appendChild(div);
+                });
+                
+                totalAmount.textContent = total.toFixed(2);
+            }
+        });
+    </script>
+</body>
+</html> 
