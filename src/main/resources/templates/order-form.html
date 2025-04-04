@@ -14,22 +14,8 @@
                     <div class="card-body">
                         <!-- Sticky Search and Filter Section -->
                         <div class="sticky-top bg-white py-3 mb-3" style="z-index: 1000;">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="foodType" id="all" checked>
-                                        <label class="form-check-label" for="all">All Items</label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="foodType" id="veg">
-                                        <label class="form-check-label" for="veg">Vegetarian</label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="foodType" id="nonVeg">
-                                        <label class="form-check-label" for="nonVeg">Non-Vegetarian</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
+                            <div class="row mb-3">
+                                <div class="col-md-12">
                                     <div class="input-group">
                                         <input type="text" class="form-control" id="searchInput" placeholder="Search menu items...">
                                         <button class="btn btn-outline-secondary" type="button" id="clearSearch">
@@ -38,16 +24,71 @@
                                     </div>
                                 </div>
                             </div>
+                            
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <h6>Categories</h6>
+                                    <div class="form-check">
+                                        <input class="form-check-input category-filter" type="radio" name="category" id="allCategories" value="all" checked>
+                                        <label class="form-check-label" for="allCategories">All Categories</label>
+                                    </div>
+                                    <div class="form-check" th:each="category : ${T(com.tunga.model.MenuItem.MenuCategory).values()}">
+                                        <input class="form-check-input category-filter" type="radio" name="category" th:id="${category}" th:value="${category}">
+                                        <label class="form-check-label" th:for="${category}" th:text="${#strings.capitalizeWords(#strings.replace(category.name(), '_', ' '))}"></label>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-3">
+                                    <h6>Dietary Options</h6>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="vegetarian" name="dietary">
+                                        <label class="form-check-label" for="vegetarian">Vegetarian</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="glutenFree" name="dietary">
+                                        <label class="form-check-label" for="glutenFree">Gluten Free</label>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-3">
+                                    <h6>Spice Level</h6>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="spicy" name="spice">
+                                        <label class="form-check-label" for="spicy">Spicy</label>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-3">
+                                    <h6>Sort By</h6>
+                                    <select class="form-select" id="sortBy">
+                                        <option value="name">Name (A-Z)</option>
+                                        <option value="price-asc">Price (Low to High)</option>
+                                        <option value="price-desc">Price (High to Low)</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                         
                         <!-- Menu Items Section with Scroll -->
                         <div style="max-height: calc(100vh - 300px); overflow-y: auto;">
                             <div class="row" id="menuItems">
-                                <div th:each="item : ${menuItems}" class="col-12 mb-3 menu-item" th:data-veg="${item.isVegetarian}" th:data-name="${item.name}">
+                                <div th:each="item : ${menuItems}" class="col-12 mb-3 menu-item" 
+                                     th:data-veg="${item.isVegetarian}" 
+                                     th:data-name="${item.name}"
+                                     th:data-category="${item.category}"
+                                     th:data-spicy="${item.isSpicy}"
+                                     th:data-gluten-free="${item.isGlutenFree}"
+                                     th:data-price="${item.price}">
                                     <div class="card">
                                         <div class="card-body">
                                             <div class="row align-items-center">
-                                                <div class="col-md-8">
+                                                <div class="col-md-2">
+                                                    <img th:if="${item.imageUrl}" th:src="${item.imageUrl}" class="img-fluid rounded" style="max-height: 100px; width: auto;">
+                                                    <div th:unless="${item.imageUrl}" class="bg-light rounded" style="height: 100px; width: 100px; display: flex; align-items: center; justify-content: center;">
+                                                        <i class="fas fa-utensils fa-2x text-muted"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
                                                     <h5 class="card-title" th:text="${item.name}"></h5>
                                                     <p class="card-text" th:text="${item.description}"></p>
                                                     <p class="card-text">
@@ -58,6 +99,8 @@
                                                         <span class="badge" th:classappend="${item.isVegetarian} ? 'bg-success' : 'bg-danger'"
                                                               th:text="${item.isVegetarian} ? 'Vegetarian' : 'Non-Vegetarian'">
                                                         </span>
+                                                        <span class="badge bg-warning" th:if="${item.isSpicy}">Spicy</span>
+                                                        <span class="badge bg-info" th:if="${item.isGlutenFree}">Gluten Free</span>
                                                     </p>
                                                 </div>
                                                 <div class="col-md-4">
@@ -129,34 +172,70 @@
             const totalAmount = document.getElementById('totalAmount');
             const searchInput = document.getElementById('searchInput');
             const clearSearch = document.getElementById('clearSearch');
+            const sortBy = document.getElementById('sortBy');
             let cart = [];
             
             function filterItems() {
                 const searchTerm = searchInput.value.toLowerCase();
-                const foodType = document.querySelector('input[name="foodType"]:checked').id;
+                const selectedCategory = document.querySelector('input[name="category"]:checked').value;
+                const isVegetarian = document.getElementById('vegetarian').checked;
+                const isGlutenFree = document.getElementById('glutenFree').checked;
+                const isSpicy = document.getElementById('spicy').checked;
                 
                 menuItems.forEach(item => {
-                    const isVeg = item.dataset.veg === 'true';
                     const itemName = item.dataset.name.toLowerCase();
-                    const matchesSearch = itemName.includes(searchTerm);
-                    const matchesType = foodType === 'all' || 
-                                      (foodType === 'veg' && isVeg) || 
-                                      (foodType === 'nonVeg' && !isVeg);
+                    const itemCategory = item.dataset.category;
+                    const isItemVegetarian = item.dataset.veg === 'true';
+                    const isItemGlutenFree = item.dataset.glutenFree === 'true';
+                    const isItemSpicy = item.dataset.spicy === 'true';
                     
-                    item.style.display = matchesSearch && matchesType ? 'block' : 'none';
+                    const matchesSearch = itemName.includes(searchTerm);
+                    const matchesCategory = selectedCategory === 'all' || itemCategory === selectedCategory;
+                    const matchesDietary = (!isVegetarian || isItemVegetarian) && (!isGlutenFree || isItemGlutenFree);
+                    const matchesSpice = !isSpicy || isItemSpicy;
+                    
+                    item.style.display = matchesSearch && matchesCategory && matchesDietary && matchesSpice ? 'block' : 'none';
                 });
+                
+                sortItems();
+            }
+            
+            function sortItems() {
+                const sortByValue = sortBy.value;
+                const menuContainer = document.getElementById('menuItems');
+                const items = Array.from(menuContainer.children);
+                
+                items.sort((a, b) => {
+                    switch(sortByValue) {
+                        case 'name':
+                            return a.dataset.name.localeCompare(b.dataset.name);
+                        case 'price-asc':
+                            return parseFloat(a.dataset.price) - parseFloat(b.dataset.price);
+                        case 'price-desc':
+                            return parseFloat(b.dataset.price) - parseFloat(a.dataset.price);
+                        default:
+                            return 0;
+                    }
+                });
+                
+                items.forEach(item => menuContainer.appendChild(item));
             }
             
             searchInput.addEventListener('input', filterItems);
-            
             clearSearch.addEventListener('click', function() {
                 searchInput.value = '';
                 filterItems();
             });
             
-            document.querySelectorAll('input[name="foodType"]').forEach(radio => {
+            document.querySelectorAll('.category-filter').forEach(radio => {
                 radio.addEventListener('change', filterItems);
             });
+            
+            document.querySelectorAll('input[name="dietary"], input[name="spice"]').forEach(checkbox => {
+                checkbox.addEventListener('change', filterItems);
+            });
+            
+            sortBy.addEventListener('change', sortItems);
             
             document.querySelectorAll('.add-to-cart').forEach(button => {
                 button.addEventListener('click', function() {
